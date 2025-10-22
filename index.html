@@ -2,103 +2,119 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>O Jogo — Dashboard</title>
-  <meta name="theme-color" content="#0B0E14"/>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>O Jogo — A Jornada do Propósito</title>
   <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0B0E14" />
   <link rel="icon" href="/icons/icon-192.png" />
-  <style>
-    /* Minimal styling dark futurista (use depois Figma tokens) */
-    :root{
-      --bg:#0B0E14; --surface:#0F1724; --accent:#8B5CF6; --cta:#FF5C8A; --text:#E6EEF8;
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#07101a);color:var(--text);font-family:Inter,system-ui,Arial;}
-    .app{max-width:1100px;margin:0 auto;padding:20px;}
-    header{display:flex;justify-content:space-between;align-items:center}
-    h1{font-family:Poppins,Inter,Arial;margin:0}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px;padding:16px;backdrop-filter: blur(6px);box-shadow:0 6px 18px rgba(0,0,0,0.5);border:1px solid rgba(139,92,246,0.08)}
-    .fab{position:fixed;right:20px;bottom:24px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cta));display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;box-shadow:0 10px 30px rgba(139,92,246,0.25)}
-    .map-canvas{height:360px;border-radius:10px;background:linear-gradient(180deg, rgba(20,20,30,0.4), rgba(10,10,18,0.2));display:flex;align-items:center;justify-content:center;color:rgba(230,238,248,0.6)}
-    .tasks-list{list-style:none;padding:0;margin:0}
-    .task{padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
-    .small{font-size:13px;color:rgba(230,238,248,0.6)}
-  </style>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <div class="app" id="app">
-    <header>
-      <div>
-        <h1>Bom dia, Ryan 👋</h1>
-        <div class="small">Progresso: Nível 3 • XP 420</div>
+  <div id="app" class="app">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand">
+        <div id="logo" class="logo">O Jogo</div>
+        <div class="subtitle" id="subtitle">O jogo de mudar sua vida começa agora.</div>
       </div>
-      <div>
-        <button id="open-chat" style="background:none;border:0;color:var(--accent);font-weight:600">Mentoria IA</button>
+      <div class="actions">
+        <select id="themeSelector" aria-label="Selecionar tema">
+          <option value="auto">Tema: Auto</option>
+          <option value="game">Game Futurista</option>
+          <option value="mentor">Mentor Minimalista</option>
+        </select>
+        <button id="loginBtn" class="btn">Entrar</button>
       </div>
     </header>
 
-    <section class="grid" style="margin-top:18px">
-      <div class="card">
-        <h3>Mapa da Jornada</h3>
-        <div class="map-canvas" id="map">Mapa mental (toque para editar)</div>
-      </div>
+    <!-- Main layout -->
+    <main class="container">
+      <section class="col left">
+        <div class="card">
+          <h3>Mapa da Jornada</h3>
+          <div id="mapArea" class="map-area">Mapa mental (toque para editar)</div>
+          <div class="small">Toque e segure para criar nó. Arraste para mover.</div>
+        </div>
+      </section>
 
-      <div class="card">
-        <h3>Minhas Tarefas</h3>
-        <ul class="tasks-list" id="tasks">
-          <li class="task"><span>Escrever roteiro vídeo 1</span><span class="small">Hoje</span></li>
-          <li class="task"><span>Gravar bloco 1</span><span class="small">Amanhã</span></li>
-        </ul>
-        <button id="new-task" style="margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--text)">+ Nova tarefa</button>
-      </div>
+      <section class="col middle">
+        <div class="card">
+          <h3>Minhas Tarefas</h3>
+          <ul id="tasksList" class="tasks-list"></ul>
+          <button id="newTaskBtn" class="btn outline">+ Nova tarefa</button>
+        </div>
 
-      <div class="card">
-        <h3>XP e Nível</h3>
-        <div style="height:120px;display:flex;align-items:center;justify-content:center"><strong style="font-size:28px">Nível 3</strong></div>
-      </div>
-    </section>
+        <div class="card">
+          <h3>Mentoria IA</h3>
+          <div id="chatPreview" class="chat-preview">Converse com sua mentora — ela adapta o tom ao seu estilo.</div>
+          <button id="openChatBtn" class="btn primary">Abrir Mentoria</button>
+        </div>
+      </section>
 
-    <div class="fab" id="fab">+</div>
+      <section class="col right">
+        <div class="card center">
+          <h3>XP e Nível</h3>
+          <div id="levelBox" class="level-box">
+            <div id="level">Nível 1</div>
+            <div id="xp">XP 0</div>
+          </div>
+        </div>
 
-    <!-- Chat modal placeholder -->
-    <div id="chatModal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:92%;max-width:720px;background:var(--surface);border-radius:12px;padding:12px;z-index:60;box-shadow:0 20px 40px rgba(0,0,0,0.6)">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Mentoria IA</strong>
-        <button id="closeChat" style="background:none;border:0;color:var(--accent)">Fechar</button>
-      </div>
-      <div id="chatBox" style="height:300px;overflow:auto;margin-top:10px;background:#07101a;padding:8px;border-radius:8px"></div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <input id="chatInput" style="flex:1;padding:10px;border-radius:8px;border:0;background:#0b1320;color:var(--text)" placeholder="Pergunte à sua mentora..." />
-        <button id="sendChat" style="background:var(--accent);border:0;padding:10px;border-radius:8px;color:#fff">Enviar</button>
+        <div class="card">
+          <h3>Perfil</h3>
+          <div id="profileBox" class="profile-box">Sem usuário</div>
+          <button id="profileSetup" class="btn">Configurar Perfil</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- FAB -->
+    <button id="fab" class="fab">+</button>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-inner">
+        <header class="modal-header">
+          <h3>Mentoria IA</h3>
+          <button id="closeChat" class="icon-btn">✕</button>
+        </header>
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Pergunte algo..."/>
+          <button id="sendChat" class="btn primary">Enviar</button>
+        </div>
       </div>
     </div>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+      <div class="modal-inner small">
+        <header><h3>Entrar / Criar conta</h3></header>
+        <div class="auth-buttons">
+          <button id="googleLogin" class="btn">Continuar com Google</button>
+          <button id="emailLogin" class="btn">Entrar com Email</button>
+        </div>
+        <div class="note small">Ao criar conta, seus dados ficarão seguros no Firebase.</div>
+        <button id="closeLogin" class="btn outline">Fechar</button>
+      </div>
+    </div>
+
+    <!-- Profile Setup -->
+    <div id="profileModal" class="modal hidden">
+      <div class="modal-inner">
+        <header><h3>Configurar Perfil</h3></header>
+        <label>Nome<input id="inputName" /></label>
+        <label>Qual seu objetivo principal?<input id="inputGoal" /></label>
+        <label>Qual estilo você prefere? 
+          <select id="prefStyle"><option value="auto">Deixe a IA escolher</option><option value="game">Game</option><option value="mentor">Mentor</option></select>
+        </label>
+        <button id="saveProfile" class="btn primary">Salvar</button>
+      </div>
+    </div>
+
+    <footer class="footer small">Versão Demo • O Jogo</footer>
   </div>
 
-  <script>
-    // Minimal client-only behaviour (demo) — substitua depois por integração Firestore/Functions
-    document.getElementById('fab').addEventListener('click', ()=> alert('Abrir menu rápido: Nova Meta / Nova Tarefa / Mentoria IA'));
-    document.getElementById('open-chat').addEventListener('click', ()=> { document.getElementById('chatModal').style.display='block'; });
-    document.getElementById('closeChat').addEventListener('click', ()=> { document.getElementById('chatModal').style.display='none'; });
-    document.getElementById('sendChat').addEventListener('click', ()=> {
-      const input = document.getElementById('chatInput'); if(!input.value) return;
-      const box = document.getElementById('chatBox');
-      const msg = document.createElement('div'); msg.style.marginBottom='8px'; msg.innerHTML = '<div style="color:#9AA8B2">Você: '+input.value+'</div>';
-      box.appendChild(msg);
-      // fake mentor reply (demo)
-      setTimeout(()=> {
-        const r = document.createElement('div'); r.style.marginBottom='12px'; r.innerHTML = '<div style="color:#E6EEF8;background:linear-gradient(90deg,#171725,#0f1724);padding:10px;border-radius:8px">MentoriaAI: Ótimo passo! Comece listando 3 micro-tarefas para hoje. Ex.: 1) Rascunho 2) Gravação 3) Upload.</div>';
-        box.appendChild(r); box.scrollTop = box.scrollHeight;
-      },700);
-      input.value='';
-    });
-
-    // register service worker
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('/sw.js').catch(()=>{/*ignore*/});
-    }
-  </script>
+  <script src="/app.js"></script>
 </body>
 </html>
