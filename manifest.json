@@ -1,21 +1,12 @@
 {
-  "name": "O Jogo",
+  "name": "O Jogo - A Jornada",
   "short_name": "O Jogo",
-  "description": "O jogo de mudar sua vida começa agora.",
-  "start_url": "index.html",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#8a2be2",
-  "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14",
+  "icons":[
+    {"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png"}
   ]
 }
