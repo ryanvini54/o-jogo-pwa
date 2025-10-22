@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>O Jogo — Dashboard</title>
+  <meta name="theme-color" content="#0B0E14"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icons/icon-192.png" />
+  <style>
+    /* Minimal styling dark futurista (use depois Figma tokens) */
+    :root{
+      --bg:#0B0E14; --surface:#0F1724; --accent:#8B5CF6; --cta:#FF5C8A; --text:#E6EEF8;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#07101a);color:var(--text);font-family:Inter,system-ui,Arial;}
+    .app{max-width:1100px;margin:0 auto;padding:20px;}
+    header{display:flex;justify-content:space-between;align-items:center}
+    h1{font-family:Poppins,Inter,Arial;margin:0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px;padding:16px;backdrop-filter: blur(6px);box-shadow:0 6px 18px rgba(0,0,0,0.5);border:1px solid rgba(139,92,246,0.08)}
+    .fab{position:fixed;right:20px;bottom:24px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--cta));display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;box-shadow:0 10px 30px rgba(139,92,246,0.25)}
+    .map-canvas{height:360px;border-radius:10px;background:linear-gradient(180deg, rgba(20,20,30,0.4), rgba(10,10,18,0.2));display:flex;align-items:center;justify-content:center;color:rgba(230,238,248,0.6)}
+    .tasks-list{list-style:none;padding:0;margin:0}
+    .task{padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+    .small{font-size:13px;color:rgba(230,238,248,0.6)}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <div>
+        <h1>Bom dia, Ryan 👋</h1>
+        <div class="small">Progresso: Nível 3 • XP 420</div>
+      </div>
+      <div>
+        <button id="open-chat" style="background:none;border:0;color:var(--accent);font-weight:600">Mentoria IA</button>
+      </div>
+    </header>
+
+    <section class="grid" style="margin-top:18px">
+      <div class="card">
+        <h3>Mapa da Jornada</h3>
+        <div class="map-canvas" id="map">Mapa mental (toque para editar)</div>
+      </div>
+
+      <div class="card">
+        <h3>Minhas Tarefas</h3>
+        <ul class="tasks-list" id="tasks">
+          <li class="task"><span>Escrever roteiro vídeo 1</span><span class="small">Hoje</span></li>
+          <li class="task"><span>Gravar bloco 1</span><span class="small">Amanhã</span></li>
+        </ul>
+        <button id="new-task" style="margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--text)">+ Nova tarefa</button>
+      </div>
+
+      <div class="card">
+        <h3>XP e Nível</h3>
+        <div style="height:120px;display:flex;align-items:center;justify-content:center"><strong style="font-size:28px">Nível 3</strong></div>
+      </div>
+    </section>
+
+    <div class="fab" id="fab">+</div>
+
+    <!-- Chat modal placeholder -->
+    <div id="chatModal" style="display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:92%;max-width:720px;background:var(--surface);border-radius:12px;padding:12px;z-index:60;box-shadow:0 20px 40px rgba(0,0,0,0.6)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Mentoria IA</strong>
+        <button id="closeChat" style="background:none;border:0;color:var(--accent)">Fechar</button>
+      </div>
+      <div id="chatBox" style="height:300px;overflow:auto;margin-top:10px;background:#07101a;padding:8px;border-radius:8px"></div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input id="chatInput" style="flex:1;padding:10px;border-radius:8px;border:0;background:#0b1320;color:var(--text)" placeholder="Pergunte à sua mentora..." />
+        <button id="sendChat" style="background:var(--accent);border:0;padding:10px;border-radius:8px;color:#fff">Enviar</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Minimal client-only behaviour (demo) — substitua depois por integração Firestore/Functions
+    document.getElementById('fab').addEventListener('click', ()=> alert('Abrir menu rápido: Nova Meta / Nova Tarefa / Mentoria IA'));
+    document.getElementById('open-chat').addEventListener('click', ()=> { document.getElementById('chatModal').style.display='block'; });
+    document.getElementById('closeChat').addEventListener('click', ()=> { document.getElementById('chatModal').style.display='none'; });
+    document.getElementById('sendChat').addEventListener('click', ()=> {
+      const input = document.getElementById('chatInput'); if(!input.value) return;
+      const box = document.getElementById('chatBox');
+      const msg = document.createElement('div'); msg.style.marginBottom='8px'; msg.innerHTML = '<div style="color:#9AA8B2">Você: '+input.value+'</div>';
+      box.appendChild(msg);
+      // fake mentor reply (demo)
+      setTimeout(()=> {
+        const r = document.createElement('div'); r.style.marginBottom='12px'; r.innerHTML = '<div style="color:#E6EEF8;background:linear-gradient(90deg,#171725,#0f1724);padding:10px;border-radius:8px">MentoriaAI: Ótimo passo! Comece listando 3 micro-tarefas para hoje. Ex.: 1) Rascunho 2) Gravação 3) Upload.</div>';
+        box.appendChild(r); box.scrollTop = box.scrollHeight;
+      },700);
+      input.value='';
+    });
+
+    // register service worker
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js').catch(()=>{/*ignore*/});
+    }
+  </script>
+</body>
+</html>
