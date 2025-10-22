@@ -1,19 +1,10 @@
-self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open('o-jogo-cache').then(cache => {
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/manifest.json'
-      ])
-    })
-  )
-})
+const CACHE = 'o-jogo-v1';
+const FILES = ['/', '/index.html', '/styles.css', '/app.js', '/manifest.json'];
 
-self.addEventListener('fetch', e => {
-  e.respondWith(
-    caches.match(e.request).then(response => {
-      return response || fetch(e.request)
-    })
-  )
-})
+self.addEventListener('install', evt => {
+  evt.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)));
+  self.skipWaiting();
+});
+self.addEventListener('fetch', evt => {
+  evt.respondWith(caches.match(evt.request).then(resp => resp || fetch(evt.request)));
+});
